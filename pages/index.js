@@ -4,9 +4,10 @@ import {PrismaClient} from '@prisma/client'
 import { useState } from 'react'
 import Image from 'next/image'
 
+const prisma = new PrismaClient()
 
 
-export default function Home({ data }) {
+export default function Index({ data }) {
   const [microphones, setMicrophones] = useState(data.microphones)
   return (
     <div className="w-11/12 mx-auto">
@@ -48,7 +49,7 @@ export default function Home({ data }) {
         </div>
       </nav>
 
-      <main className="w-11/12 my-12 mx-auto grid grid-cols-3 gap-auto">
+      <main className="w-11/12 my-12 mx-auto grid grid-cols-4 gap-4">
       
           {microphones.map((p) => {
             return (
@@ -57,7 +58,7 @@ export default function Home({ data }) {
                   <Image src={p.imageUrl} layout='fill' objectFit='cover' className='rounded-2xl'/>
                 </div>
                 <div class="p-5">
-                    <h5 class="text-gray-900 font-bold text-2xl tracking-tight mb-2">{p.brand + p.model}</h5>
+                    <h5 class="text-gray-900 font-bold text-2xl tracking-tight mb-2">{p.brand + " " + p.model}</h5>
                     <p class="font-normal text-gray-700 mb-3">Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.</p>
                     <Link href='/microphone/[id]' as={`/microphone/${p.id}`}>
                     <a class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-2 text-center inline-flex items-center">
@@ -75,9 +76,22 @@ export default function Home({ data }) {
 }
 
 
-export const getStaticProps = async ctx =>  {
-  const prisma = new PrismaClient()
-  const microphones = await prisma.microphone.findMany()
+export const getStaticProps = async (ctx) => {
+  const currentPage = ctx.params?.currentPage;
+  const currentPageNumber = +(currentPage || 0);
+
+  const min = currentPageNumber * 5;
+  const max = (currentPageNumber + 1) * 5;
+
+  const microphones = await prisma.microphone.findMany({
+    where: {
+      id: {
+        gte: min,
+        lte: max
+      }
+
+    }
+  })
 
   return {
       props: {
