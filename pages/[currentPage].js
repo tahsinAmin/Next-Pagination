@@ -1,11 +1,10 @@
 import React from 'react'
 import Index, {getStaticProps} from '.'
 import {PrismaClient} from '@prisma/client'
+const prisma = new PrismaClient()
 
 export default Index;
 export {getStaticProps};
-
-const prisma = new PrismaClient()
 
 export async function getStaticPaths() {
    // const result = await prisma.$queryRaw`SELECT count(id) FROM Microphone`;
