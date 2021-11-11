@@ -1,10 +1,23 @@
 // import App from "next/app";
 import type { AppProps /*, AppContext */ } from 'next/app'
+import {Router} from 'next/router';
+
+Router.events.on('routeChangeStart', () => {
+  console.log('on start');
+})
+
+Router.events.on('routeChangeComplete', () => {
+  console.log('on complete');
+})
+
+Router.events.on('routeChangeError', () => {
+  console.log('on error');
+})
 
 function MyApp({ Component, pageProps }: AppProps) {
   return(
     <div>
-      <h1 className="text-2xl-font-semibold">Welcome to My App</h1>
+      <h1 className="text-2xl-font-semibold">Welcome to My App</h1> {/** This will now show on every page */}
       <Component {...pageProps} />
     </div>
   )
