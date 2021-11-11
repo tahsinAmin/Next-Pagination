@@ -3,6 +3,7 @@ import { Microphone } from '../model/microphone'
 import { GetServerSideProps } from 'next';
 import {PrismaClient} from '@prisma/client'
 import next from 'next';
+import Link from 'next/link';
 const prisma = new PrismaClient()
 
 export interface IndexProps {
@@ -11,9 +12,14 @@ export interface IndexProps {
 
 export default function index({microphones}: IndexProps) {
   return (
-    <pre>
-      {JSON.stringify(microphones, null, 4)}
-    </pre>
+    <div>
+      <Link href='/people'>
+        <a>People</a>
+      </Link>
+      <pre>
+        {JSON.stringify(microphones, null, 4)}
+      </pre>
+    </div>
   )
 }
 
